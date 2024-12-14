@@ -35,7 +35,7 @@ func main() {
 	getHomework(client, "CS101")
 }
 
-// this function is responsible for making a CreateHomework Request
+// createHomework is a function that is responsible for making a CreateHomework Request
 func createHomework(client gpb.HomeworkServiceClient, courseId, title, description string) {
 	// Create a timeout context for the RPC call
 	ctx, cancel := context.WithTimeout(context.Background(), time.Second)
@@ -58,7 +58,7 @@ func createHomework(client gpb.HomeworkServiceClient, courseId, title, descripti
 	log.Printf("Homework created successfully for course %s: %v", courseId, res.Res)
 }
 
-// this function is responsible for making the Get Homework Request
+// getHomework is a function that is responsible for making the Get Homework Request
 func getHomework(client gpb.HomeworkServiceClient, courseId string) {
 	// Create a timeout context for the RPC call
 	ctx, cancel := context.WithTimeout(context.Background(), time.Second)
