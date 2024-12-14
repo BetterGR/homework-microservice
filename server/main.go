@@ -7,11 +7,11 @@ import (
 	"net"
 	"os"
 
+	"flag"
+
 	gpb "github.com/BetterGR/homework-microservice/homework_protos"
-	"github.com/go-logr/logr"
-	"github.com/go-logr/zapr"
-	"go.uber.org/zap"
 	"google.golang.org/grpc"
+	"k8s.io/klog/v2"
 )
 
 const (
@@ -23,37 +23,30 @@ const (
 type homeworkServer struct {
 	//throws unimplemented exception
 	gpb.UnimplementedHomeworkServiceServer
-	logger logr.Logger
 }
 
-// newHomeworkServer is a constructor for the homeworkServer
-func newHomeworkServer(logger logr.Logger) *homeworkServer {
-	return &homeworkServer{logger: logger}
-}
-
-// setupLogger initializes the zap-based logr logger
-func setupLogger() logr.Logger {
-	zapLog, err := zap.NewDevelopment() // Use zap.NewProduction() for production environments
-	if err != nil {
-		panic(fmt.Sprintf("Failed to initialize logger: %v", err))
-	}
-	return zapr.NewLogger(zapLog)
+// setupKLogger initializes the zap-based logr logger
+func setupKLogger() {
+	klog.InitFlags(nil)
+	flag.Parse()
 }
 
 // GetHomework function handles the request for getting all the homeworks that are available in a certain course
 func (s *homeworkServer) GetHomework(ctx context.Context, req *gpb.GetHomeworkRequest) (*gpb.GetHomeworkResponse, error) {
 	// Example: Hardcoded homework list
+	logger := klog.FromContext(ctx)
 	homeworks := []*gpb.Homework{
 		{Id: "1", Title: "Hw1", Description: "implement bubble sort"},
 		{Id: "2", Title: "Hw2", Description: "implement Dijkstra's algorithm"},
 	}
-	s.logger.Info("Fetching homeworks", "courseID", req.CourseId, "homeworkCount", len(homeworks))
+	logger.V(0).Info("Fetching homeworks", "courseID", req.CourseId, "homeworkCount", len(homeworks))
 	return &gpb.GetHomeworkResponse{Hw: homeworks}, nil
 }
 
 // CreateHomework function handles the requests for adding new home work to a certain course
 func (s *homeworkServer) CreateHomework(ctx context.Context, req *gpb.CreateHomeworkRequest) (*gpb.CreateHomeworkResponse, error) {
-	s.logger.Info("New Homework added",
+	logger := klog.FromContext(ctx)
+	logger.V(0).Info("New Homework added",
 		"courseID", req.CourseId,
 		"title", req.Title,
 		"description", req.Description,
@@ -64,10 +57,11 @@ func (s *homeworkServer) CreateHomework(ctx context.Context, req *gpb.CreateHome
 
 func main() {
 	// Initialize the logger
-	logger := setupLogger()
+	setupKLogger()
+
 	defer func() {
 		if r := recover(); r != nil {
-			logger.Error(fmt.Errorf("%v", r), "Application crashed")
+			klog.Error(fmt.Errorf("%v", r), "Application crashed")
 			os.Exit(1)
 		}
 	}()
@@ -81,13 +75,11 @@ func main() {
 	// Create a new gRPC server
 	grpcServer := grpc.NewServer()
 
-	server := newHomeworkServer(logger)
-
 	// Register the HomeworkServiceServer with the gRPC server
-	gpb.RegisterHomeworkServiceServer(grpcServer, server)
+	gpb.RegisterHomeworkServiceServer(grpcServer, &homeworkServer{})
 
-	logger.Info("gRPC server is running", "address", address)
+	klog.Info("gRPC server is running", "address", address)
 	if err := grpcServer.Serve(lis); err != nil {
-		logger.Error(err, "Failed to serve")
+		klog.Error(err, "Failed to serve")
 	}
 }
