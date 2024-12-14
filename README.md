@@ -15,7 +15,7 @@ The Homework domain manages all information related to assignments for each cour
 
 #### 1. Run the Service Using the Makefile
 
-- Start the server and client:
+- compile the protofiles for the homework microservice:
   ```bash
   make
   ```
@@ -55,7 +55,4 @@ Run the script:
   ```
 - Alternatively, you can stop the server directly by pressing Ctrl+C in the terminal where it is running
 
-## Contact
-
-For inquiries or support, please contact [Your Name/Team] at [your-email@example.com](mailto\:your-email@example.com).
 

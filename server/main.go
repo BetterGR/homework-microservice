@@ -14,15 +14,19 @@ import (
 	"google.golang.org/grpc"
 )
 
-// homeworkService is an implementation for the Grpc homework microservice
+const (
+	address  = "localhost:1234"
+	protocol = "tcp"
+)
+
+// homeworkServer is an implementation for the Grpc homework microservice
 type homeworkServer struct {
 	//throws unimplemented exception
 	gpb.UnimplementedHomeworkServiceServer
 	logger logr.Logger
 }
 
-// logger functions
-// initializing the logger
+// newHomeworkServer is a constructor for the homeworkServer
 func newHomeworkServer(logger logr.Logger) *homeworkServer {
 	return &homeworkServer{logger: logger}
 }
@@ -58,12 +62,6 @@ func (s *homeworkServer) CreateHomework(ctx context.Context, req *gpb.CreateHome
 	return &gpb.CreateHomeworkResponse{Res: true}, nil
 }
 
-// address for the server
-const (
-	address  = "localhost:1234"
-	protocol = "tcp"
-)
-
 func main() {
 	// Initialize the logger
 	logger := setupLogger()
@@ -74,7 +72,7 @@ func main() {
 		}
 	}()
 
-	// Create a TCP listener on port 50051
+	// Create a TCP listener
 	lis, err := net.Listen(protocol, address)
 	if err != nil {
 		log.Fatalf("Failed to listen: %v", err)
