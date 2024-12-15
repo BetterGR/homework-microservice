@@ -19,21 +19,21 @@ const (
 	protocol = "tcp"
 )
 
-// homeworkServer is an implementation for the Grpc homework microservice
+// homeworkServer is an implementation for the Grpc homework microservice.
 type homeworkServer struct {
-	//throws unimplemented exception
+	//throws unimplemented exception.
 	gpb.UnimplementedHomeworkServiceServer
 }
 
-// setupKLogger initializes the zap-based logr logger
+// setupKLogger initializes Klog logger.
 func setupKLogger() {
 	klog.InitFlags(nil)
 	flag.Parse()
 }
 
-// GetHomework function handles the request for getting all the homeworks that are available in a certain course
+// GetHomework function handles the request for getting all the homeworks that are available in a certain course.
 func (s *homeworkServer) GetHomework(ctx context.Context, req *gpb.GetHomeworkRequest) (*gpb.GetHomeworkResponse, error) {
-	// Example: Hardcoded homework list
+	// Example: Hardcoded homework list.
 	logger := klog.FromContext(ctx)
 	homeworks := []*gpb.Homework{
 		{Id: "1", Title: "Hw1", Description: "implement bubble sort"},
@@ -43,7 +43,7 @@ func (s *homeworkServer) GetHomework(ctx context.Context, req *gpb.GetHomeworkRe
 	return &gpb.GetHomeworkResponse{Hw: homeworks}, nil
 }
 
-// CreateHomework function handles the requests for adding new home work to a certain course
+// CreateHomework function handles the requests for adding new home work to a certain course.
 func (s *homeworkServer) CreateHomework(ctx context.Context, req *gpb.CreateHomeworkRequest) (*gpb.CreateHomeworkResponse, error) {
 	logger := klog.FromContext(ctx)
 	logger.V(0).Info("New Homework added",
@@ -56,7 +56,7 @@ func (s *homeworkServer) CreateHomework(ctx context.Context, req *gpb.CreateHome
 }
 
 func main() {
-	// Initialize the logger
+	// Initialize the logger.
 	setupKLogger()
 
 	defer func() {
@@ -66,16 +66,16 @@ func main() {
 		}
 	}()
 
-	// Create a TCP listener
+	// Create a TCP listener.
 	lis, err := net.Listen(protocol, address)
 	if err != nil {
 		log.Fatalf("Failed to listen: %v", err)
 	}
 
-	// Create a new gRPC server
+	// Create a new gRPC server.
 	grpcServer := grpc.NewServer()
 
-	// Register the HomeworkServiceServer with the gRPC server
+	// Register the HomeworkServiceServer with the gRPC server.
 	gpb.RegisterHomeworkServiceServer(grpcServer, &homeworkServer{})
 
 	klog.Info("gRPC server is running", "address", address)

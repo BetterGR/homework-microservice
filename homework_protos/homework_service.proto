@@ -5,39 +5,47 @@ option go_package ="github.com/BetterGR/homework-microservice/homework_protos";
 package Homework;
 /*
 The Homework domain manages all information related to assignments for each course,
-including workflows for completing homework, submission tracking
+including workflows for completing homework, submission tracking.
  */
 service HomeworkService{
-    //returns all the homework assigned in a certain course
+    // Returns all the homework assigned in a certain course.
     rpc GetHomework(GetHomeworkRequest) returns (GetHomeworkResponse);
-    //creates a new homework for a certain course and returns boolean response
+    // Creates a new homework for a certain course and returns boolean response.
     rpc CreateHomework(CreateHomeworkRequest) returns (CreateHomeworkResponse);
 }
 
 
-// Definition of Homework message
+// Definition of Homework message.
 message Homework {
-    string id = 1;                // Unique ID for the homework
-    string courseId = 2;          // ID of the course the homework belongs to
-    string title = 3;             // Title of the homework
-    string description = 4;       // Description of the homework
-    repeated File files = 5;      // Associated files for the homework
-    string workflow = 6;        // Workflow instructions for completing the homework
-    string dueDate = 7;           // Due date of the homework
-    repeated Submission submissions = 8; // Submissions for this homework
+    // Unique ID for the homework.
+    string id = 1;                
+    // ID of the course the homework belongs to.
+    string courseId = 2;          
+    // Title of the homework.
+    string title = 3;            
+    // Description of the homework.
+    string description = 4;       
+    // Associated files for the homework.
+    repeated File files = 5;    
+    // Workflow instructions for completing the homework.
+    string workflow = 6;        
+    // Due date of the homework.
+    string dueDate = 7;           
+    // Submissions for this homework.
+    repeated Submission submissions = 8; 
 }
-//Defining core types for the homework service:
-//this message is used to represent Files in the homework
+// Defining core types for the homework service.
+// This message is used to represent Files in the homework.
 message File {
     string filename = 1;       
     bytes content = 2;         
     string mimeType = 3;       
 }
-//this message is used to represent the new added feature workflows
+// This message is used to represent the new added feature workflows.
 message Workflow {
-    repeated string steps = 1; //could be changed
+    repeated string steps = 1; // Could be changed.
 }
-//this message is used to represent student Submissions
+// This message is used to represent student Submissions.
 message Submission {
     string studentId = 1;       
     string submissionTime = 2;  
@@ -46,17 +54,17 @@ message Submission {
 }
 
 
-//request message for getting homework containing the course id
+// Request message for getting homework containing the course id.
 message GetHomeworkRequest{
     string courseId = 1;
 }
-//response message containing the  for said course
+// Response message containing the homework for said course.
 message GetHomeworkResponse{
     repeated Homework Hw = 1;
 }
 
 
-//request message for creating new homework
+// Request message for creating new homework.
 message CreateHomeworkRequest{
     string courseId = 1;
     string Title = 2;
@@ -66,7 +74,7 @@ message CreateHomeworkRequest{
     string dueDate = 6;
     repeated Submission submission = 7;
 }
-//boolean response to give feedback incase the function failed
+// Boolean response to give feedback in case the function failed.
 message CreateHomeworkResponse{
     bool res = 1;
 }
