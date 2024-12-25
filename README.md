@@ -8,17 +8,41 @@ The Homework domain manages all information related to assignments for each cour
 
 ### Prerequisites
 
-- **Go** (>= 1.19)
+- **Go** (>= 1.23.4)
 - **tmux** (optional, required only for running the bash script)
+- **Docker** (optional, required for container operations)
+
+### Available Make Commands
+
+The following commands are available through the Makefile:
+
+- `make all` - Build and check everything (proto, gomod, fmt, vet, lint)
+- `make proto` - Generate Go code from proto files
+- `make gomod` - Manage Go modules (tidy and verify)
+- `make fmt` - Format Go code using gofumpt and gci
+- `make vet` - Run Go vet checks on code
+- `make lint` - Run golangci-lint checks
+- `make build` - Build the server binary
+- `make run` - Run the server
+- `make docker-build` - Build Docker image
+- `make docker-push` - Push Docker image to registry
+- `make clean` - Clean up generated files
+- `make help` - Display available make commands
 
 ### Running the Microservice
 
-#### 1. Run the Service Using the Makefile
+#### 1. Using Make Commands
 
-- compile the protofiles for the homework microservice:
-  ```bash
-  make
-  ```
+```bash
+# Build and run all checks
+make
+
+# Run the server
+make run
+
+# Build Docker image
+make docker-build
+```
 
 #### 2. Manual Setup (Without tmux or Script)
 
