@@ -1,0 +1,89 @@
+syntax = "proto3";
+
+option go_package ="github.com/BetterGR/homework-microservice/homework_protos";
+
+package Homework;
+/*
+The Homework domain manages all information related to assignments for each course,
+including workflows for completing homework, submission tracking.
+ */
+service HomeworkService{
+    // Returns all the homework assigned in a certain course.
+    rpc GetHomework(GetHomeworkRequest) returns (GetHomeworkResponse);
+    // Creates a new homework for a certain course and returns boolean response.
+    rpc CreateHomework(CreateHomeworkRequest) returns (CreateHomeworkResponse);
+}
+
+
+// Definition of Homework message.
+message Homework {
+    // Token for authentication.    
+    string token = 1;
+    // Unique ID for the homework.
+    string id = 2;                
+    // ID of the course the homework belongs to.
+    string courseId = 3;          
+    // Title of the homework.
+    string title = 4;            
+    // Description of the homework.
+    string description = 5;       
+    // Associated files for the homework.
+    repeated File files = 6;    
+    // Workflow instructions for completing the homework.
+    string workflow = 7;        
+    // Due date of the homework.
+    string dueDate = 8;           
+    // Submissions for this homework.
+    repeated Submission submissions = 9; 
+}
+// Defining core types for the homework service.
+// This message is used to represent Files in the homework.
+message File {
+    string token = 1;
+    string filename = 2;       
+    bytes content = 3;         
+    string mimeType = 4;       
+}
+// This message is used to represent the new added feature workflows.
+message Workflow {
+    string token = 1;
+    repeated string steps = 2; // Could be changed.
+}
+// This message is used to represent student Submissions.
+message Submission {
+    string token = 1;
+    string studentId = 2;       
+    string submissionTime = 3;  
+    File submissionFile = 4;                     
+    repeated string partnersId = 5; 
+}
+
+
+// Request message for getting homework containing the course id.
+message GetHomeworkRequest{
+    string token = 1;
+    string courseId = 2;
+}
+// Response message containing the homework for said course.
+message GetHomeworkResponse{
+    string token = 1;
+    repeated Homework Hw = 2;
+}
+
+
+// Request message for creating new homework.
+message CreateHomeworkRequest{
+    string token = 1;
+    string courseId = 2;
+    string title = 3;
+    string description = 4;
+    repeated File hwFile = 5;
+    Workflow workflow = 6;
+    string dueDate = 7;
+    repeated Submission submission = 8;
+}
+// Boolean response to give feedback in case the function failed.
+message CreateHomeworkResponse{ 
+    string token = 1;
+    bool res = 2;
+}
