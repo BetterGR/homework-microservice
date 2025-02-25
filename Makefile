@@ -77,7 +77,7 @@ fmt: ensure-gofumpt ensure-gci
 	@go fmt ./...
 	@gofumpt -w .
 	@gci write --skip-generated .
-	@echo [FMT] Go code formatted .
+	@echo [FMT] Go code formatted.
 
 # Vet Go code
 vet:
@@ -104,7 +104,7 @@ endif
 # Run the server
 run: proto fmt vet lint
 	@echo [RUN] Starting server...
-	@go run ./server/server.go $(ARGS)
+	@go run ./server $(ARGS)
 
 # Build Docker image
 docker-build: proto fmt vet lint build

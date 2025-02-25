@@ -1,7 +1,6 @@
 linters:
   enable-all: true
   disable:
-    - typecheck      # Disables type checking 
     - exportloopref  # Disables warnings about export loop references
     - nlreturn       # Disables "newline return" linter
     - godox          # Disables TODOs or comments checks
